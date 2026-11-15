@@ -1,0 +1,2 @@
+# Preserve the upstream notices byte for byte.
+licenses/*-THIRD-PARTY-NOTICES.TXT -text whitespace=-trailing-space

@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>../../art/branding/venti.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../m4-local-dialogue/DialogueClient.cs;../m4-local-dialogue/DialogueSession.cs;../m4-local-dialogue/LocalModelPreview.cs;../m4-local-dialogue/ModelProcessJob.cs;../m4-local-dialogue/MemoryStore.cs"
+             Link="LocalDialogue/%(Filename)%(Extension)" />
+    <None Include="../../THIRD_PARTY_NOTICES.md" Link="licenses/THIRD_PARTY_NOTICES.md"
+          CopyToPublishDirectory="PreserveNewest" />
+    <None Include="../../LICENSE" Link="licenses/VENTI-ALIVE-LICENSE.txt"
+          Condition="Exists('../../LICENSE')" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="../../licenses/*-THIRD-PARTY-NOTICES.TXT" Link="licenses/%(Filename)%(Extension)"
+          CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Target Name="IncludeRuntimeLicenseFiles" AfterTargets="ComputeFilesToPublish" Condition="'$(SelfContained)' == 'true'">
+    <ItemGroup>
+      <_CorePack Include="@(ResolvedRuntimePack)" Condition="'%(ResolvedRuntimePack.FrameworkName)' == 'Microsoft.NETCore.App'" />
+      <_DesktopPack Include="@(ResolvedRuntimePack)" Condition="'%(ResolvedRuntimePack.FrameworkName)' == 'Microsoft.WindowsDesktop.App'" />
+      <_CoreNotices Include="@(_CorePack->'%(PackageDirectory)/LICENSE.TXT');@(_CorePack->'%(PackageDirectory)/THIRD-PARTY-NOTICES.TXT')" />
+      <_DesktopLicense Include="@(_DesktopPack->'%(PackageDirectory)/LICENSE')" />
+      <ResolvedFileToPublish Include="@(_CoreNotices)" RelativePath="licenses/dotnet/%(Filename)%(Extension)"
+                             CopyToPublishDirectory="PreserveNewest" />
+      <ResolvedFileToPublish Include="@(_DesktopLicense)" RelativePath="licenses/windowsdesktop/LICENSE"
+                             CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+</Project>

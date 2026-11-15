@@ -1,0 +1,74 @@
+<Window x:Class="Aeris.WindowProbe.DialogueWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:ClassModifier="internal"
+        Title="离线聊天 · 温迪" Width="590" Height="600" MinWidth="495" MinHeight="470"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        Background="#F6F8F4" Foreground="#20372D" FontSize="14" Language="zh-CN">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="MinHeight" Value="31"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel>
+            <Button x:Name="ModelButton" DockPanel.Dock="Right" Content="启动模型" Click="ToggleModel"
+                    AutomationProperties.AutomationId="ChatModel" Margin="9,0,0,0"/>
+            <ComboBox x:Name="Backend" DockPanel.Dock="Right" Width="107" SelectedIndex="0"
+                      SelectionChanged="ChangeBackend" VerticalContentAlignment="Center"
+                      AutomationProperties.Name="模型推理方式" Margin="9,0,0,0">
+                <ComboBoxItem Content="显卡加速"/>
+                <ComboBoxItem Content="CPU"/>
+            </ComboBox>
+            <Button x:Name="FolderButton" DockPanel.Dock="Left" Content="选择模型文件夹" Click="ChooseFolder"/>
+            <TextBlock x:Name="FolderLabel" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="8,0,0,0"
+                       Foreground="#4B6056" FontSize="12"/>
+        </DockPanel>
+        <TextBlock Grid.Row="1" x:Name="Status" Margin="0,10,0,12" TextWrapping="Wrap" MinHeight="20"
+                   Foreground="#4B6056" AutomationProperties.AutomationId="ChatStatus"/>
+        <ListBox Grid.Row="2" x:Name="Transcript" AutomationProperties.AutomationId="ChatTranscript"
+                 Background="#FFFFFF" BorderBrush="#D8E2D9" BorderThickness="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="#F2F6F1" BorderBrush="#DFE9DF" BorderThickness="1"
+                            CornerRadius="9" Margin="9,6,9,2" Padding="10,7">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Speaker}" FontWeight="SemiBold" Foreground="#21634D"/>
+                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="0,4,0,1"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel Grid.Row="3" Margin="0,10,0,9">
+            <Button x:Name="ClearButton" DockPanel.Dock="Right" Content="清空对话" Click="ClearChat" Margin="6,0,0,0"/>
+            <Button x:Name="MemoryButton" DockPanel.Dock="Right" Content="管理记忆" Click="ManageMemory"
+                    AutomationProperties.AutomationId="ChatManageMemory"/>
+            <CheckBox x:Name="MemoryToggle" Content="使用已保存的记忆" VerticalAlignment="Center" IsChecked="True"
+                      Checked="ToggleMemory" Unchecked="ToggleMemory" AutomationProperties.AutomationId="ChatMemory"
+                      ToolTip="切换后会清空当前对话"/>
+        </DockPanel>
+        <DockPanel Grid.Row="4">
+            <Button x:Name="SendButton" DockPanel.Dock="Right" Content="发送" Click="SendOrCancel"
+                    AutomationProperties.AutomationId="ChatSend" Width="82" Margin="9,0,0,0"
+                    Background="#21634D" Foreground="White"/>
+            <TextBox x:Name="Prompt" MinHeight="48" MaxLength="2000" Padding="9,7" AcceptsReturn="True"
+                     TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" PreviewKeyDown="PromptKeyDown"
+                     AutomationProperties.Name="发送给温迪的文字" AutomationProperties.AutomationId="ChatPrompt"
+                     ToolTip="Enter 发送，Shift+Enter 换行"/>
+        </DockPanel>
+    </Grid>
+</Window>

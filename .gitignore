@@ -1,0 +1,11 @@
+# Local tool state and build outputs
+.vs/
+bin/
+obj/
+node_modules/
+artifacts/local/
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
